@@ -20,11 +20,12 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo selectUser(String id) {
-        return mapper.selectUser(id);
+        return mapper.selectById(id);
     }
 
     @Override
-    @Transactional(value = DataSourceContent.TRANSACTION_UBT,rollbackFor = Exception.class)
+//    @Transactional(value = DataSourceContent.TRANSACTION_UBT,rollbackFor = Exception.class)
+    @DSTransactional
     public int save(UserInfo userInfo) {
         int save = mapper.save(userInfo);
         bookInfoMapper.save(BookInfo.builder().id("1").bookName("笑傲江湖").bookPage("100").build());

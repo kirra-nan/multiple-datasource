@@ -3,74 +3,74 @@ server:
 spring:
   application:
     name: kirra-cloud
-  datasource:
+  autoconfigure:
+    # 排除 Druid 自动配置
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource: #数据库链接相关配置
+    # 指定使用 Druid 数据源
     type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      web-stat-filter:
-        enabled: true #是否启用StatFilter默认值true
-        url-pattern: /*
-        exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
-        session-stat-enable: true
-        session-stat-max-count: 10
-      stat-view-servlet:
-        enabled: true #是否启用StatViewServlet默认值true
-        url-pattern: /druid/*
-        reset-enable: true
-        login-username: admin
-        login-password: admin
-        allow:
+    dynamic:
+      #设置默认的数据源或者数据源组,默认值即为 order
+      primary: order
+      druid: #以下是全局默认值，可以全局更改
+        #监控统计拦截的filters
+        filters: stat,wall
+      datasource:
+        order:
+          url: jdbc:postgresql://localhost:5432/order?characterEncoding=UTF-8
+          username: postgres
+          password: xiaoxiong
+          driver-class-name: org.postgresql.Driver
+          druid: # 以下参数针对每个库可以重新设置druid参数
+            initial-size: 5  # 初始化大小
+            min-idle: 5  # 最小
+            max-active: 100  # 最大
+            max-wait: 60000  # 配置获取连接等待超时的时间
+            validation-query: select version()
+            time-between-eviction-runs-millis: 60000  # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            min-evictable-idle-time-millis: 300000  # 指定一个空闲连接最少空闲多久后可被清除，单位是毫秒
+            filters: config,wall,stat  # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+            # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+            connectionProperties: druid.stat.slow-sql-millis=2000;druid.stat.logSlowSql=true;config.decrypt=false
+            test-while-idle: true
+            test-on-borrow: true
+            test-on-return: false
+            # 是否缓存preparedStatement，也就是PSCache  官方建议MySQL下建议关闭   个人建议如果想用SQL防火墙 建议打开
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+        ubt:
+          url: jdbc:postgresql://localhost:5432/ubt?characterEncoding=UTF-8
+          username: postgres
+          password: xiaoxiong
+          driver-class-name: org.postgresql.Driver
+          druid: # 以下参数针对每个库可以重新设置druid参数
+            initial-size: 5  # 初始化大小
+            min-idle: 5  # 最小
+            max-active: 100  # 最大
+            max-wait: 60000  # 配置获取连接等待超时的时间
+            validation-query: select version()
+            time-between-eviction-runs-millis: 60000  # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            min-evictable-idle-time-millis: 300000  # 指定一个空闲连接最少空闲多久后可被清除，单位是毫秒
+            filters: config,wall,stat  # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+            # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+            connectionProperties: druid.stat.slow-sql-millis=2000;druid.stat.logSlowSql=true;config.decrypt=false
+            test-while-idle: true
+            test-on-borrow: true
+            test-on-return: false
+            # 是否缓存preparedStatement，也就是PSCache  官方建议MySQL下建议关闭   个人建议如果想用SQL防火墙 建议打开
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
 
-      order:
-        username: postgres
-        password: xiaoxiong
-        url: jdbc:postgresql://localhost:5432/order?characterEncoding=UTF-8
-        driver-class-name: org.postgresql.Driver
-        initial-size: 5  # 初始化大小
-        min-idle: 5  # 最小
-        max-active: 100  # 最大
-        max-wait: 60000  # 配置获取连接等待超时的时间
-        validation-query: select version()
-        time-between-eviction-runs-millis: 60000  # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-        min-evictable-idle-time-millis: 300000  # 指定一个空闲连接最少空闲多久后可被清除，单位是毫秒
-        filters: config,wall,stat  # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-        # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-        connectionProperties: druid.stat.slowSqlMillis=200;druid.stat.logSlowSql=true;config.decrypt=false
-        test-while-idle: true
-        test-on-borrow: true
-        test-on-return: false
-        # 是否缓存preparedStatement，也就是PSCache  官方建议MySQL下建议关闭   个人建议如果想用SQL防火墙 建议打开
-        pool-prepared-statements: true
-        max-pool-prepared-statement-per-connection-size: 20
-
-      ubt:
-        username: postgres
-        password: xiaoxiong
-        url: jdbc:postgresql://localhost:5432/ubt?characterEncoding=UTF-8
-        driver-class-name: org.postgresql.Driver
-        initial-size: 5  # 初始化大小
-        min-idle: 5  # 最小
-        max-active: 100  # 最大
-        max-wait: 60000  # 配置获取连接等待超时的时间
-        validation-query: select 'x'
-        time-between-eviction-runs-millis: 60000  # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-        min-evictable-idle-time-millis: 300000  # 指定一个空闲连接最少空闲多久后可被清除，单位是毫秒
-        filters: config,wall,stat  # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-        # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-        connectionProperties: druid.stat.slowSqlMillis=200;druid.stat.logSlowSql=true;config.decrypt=false
-        test-while-idle: true
-        test-on-borrow: true
-        test-on-return: false
-        # 是否缓存preparedStatement，也就是PSCache  官方建议MySQL下建议关闭   个人建议如果想用SQL防火墙 建议打开
-        pool-prepared-statements: true
-        max-pool-prepared-statement-per-connection-size: 20
-
-mybatis:
+#mybatis:
   # multiple don`t need
 #  mapper-locations: classpath:mapper/**/*.xml
 #  type-aliases-package: com.example.kirracloud.entity
 #  configuration:
 #    log-impl:
 #    mapUnderscoreToCamelCase: true
+
+mybatis-plus:
+#  mapper-locations: mapper/**/*.xml
 
 #log print
 logging:
