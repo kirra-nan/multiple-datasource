@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace对应mapper接口所在的位置-->
+<mapper namespace="com.example.kirracloud.mapper.ubt.BookInfoMapper">
+    <!--对应mapper接口中的方法public Book queryBook(int id);-->
+    <select id="selectBook" resultType="com.example.kirracloud.entity.BookInfo">
+        select * from user_info where id = #{id}
+    </select>
+
+    <!--对应mapper接口中的方法public Book queryBook(int id);-->
+    <insert id="save" parameterType="com.example.kirracloud.entity.BookInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into user_info(id, b_name, b_page)
+        values (#{bookInfo.id}, #{bookInfo.bookName}, #{bookInfo.bookPage})
+    </insert>
+
+</mapper>
