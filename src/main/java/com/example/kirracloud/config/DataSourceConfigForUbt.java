@@ -1,6 +1,7 @@
 package com.example.kirracloud.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.example.kirracloud.content.DataSourceContent;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -43,16 +44,16 @@ public class DataSourceConfigForUbt {
         return bean.getObject();
     }
 
-    @Bean("ubtSqlSessionTemplate")
-    // 表示这个数据源是默认数据源
-    @Primary
-    public SqlSessionTemplate getUbtSqlSessionTemplate(
-            @Qualifier("ubtSqlSessionFactory") SqlSessionFactory sessionFactory) {
-        return new SqlSessionTemplate(sessionFactory);
-    }
+//    @Bean("ubtSqlSessionTemplate")
+//    // 表示这个数据源是默认数据源
+//    @Primary
+//    public SqlSessionTemplate getUbtSqlSessionTemplate(
+//            @Qualifier("ubtSqlSessionFactory") SqlSessionFactory sessionFactory) {
+//        return new SqlSessionTemplate(sessionFactory);
+//    }
 
     // TransactionManager(事务管理者)
-    @Bean(name = "ubtTransactionManager")
+    @Bean(name = DataSourceContent.TRANSACTION_UBT)
     @Primary
     public DataSourceTransactionManager getUbtTransactionManager(@Qualifier("ubtDataSource") DataSource datasource) {
         DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
@@ -61,9 +62,9 @@ public class DataSourceConfigForUbt {
     }
 
     // TransactionTemplate(事务模板)
-    @Bean
-    @Primary
-    public TransactionTemplate getUbtTransactionTemplate(@Qualifier("ubtTransactionManager") DataSourceTransactionManager manager) {
-        return new TransactionTemplate(manager);
-    }
+//    @Bean
+//    @Primary
+//    public TransactionTemplate getUbtTransactionTemplate(@Qualifier(DataSourceContent.TRANSACTION_UBT) DataSourceTransactionManager manager) {
+//        return new TransactionTemplate(manager);
+//    }
 }

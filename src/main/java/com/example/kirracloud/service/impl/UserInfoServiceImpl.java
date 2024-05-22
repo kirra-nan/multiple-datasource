@@ -1,7 +1,10 @@
 package com.example.kirracloud.service.impl;
 
+import com.example.kirracloud.content.DataSourceContent;
+import com.example.kirracloud.entity.BookInfo;
 import com.example.kirracloud.entity.UserInfo;
 import com.example.kirracloud.mapper.order.UserInfoMapper;
+import com.example.kirracloud.mapper.ubt.BookInfoMapper;
 import com.example.kirracloud.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     private UserInfoMapper mapper;
 
+    @Autowired
+    private BookInfoMapper bookInfoMapper;
 
     @Override
     public UserInfo selectUser(String id) {
@@ -19,8 +24,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    @Transactional(value = "orderTransactionManager",rollbackFor = Exception.class)
+    @Transactional(value = DataSourceContent.TRANSACTION_UBT,rollbackFor = Exception.class)
     public int save(UserInfo userInfo) {
-        return mapper.save(userInfo);
+        int save = mapper.save(userInfo);
+        bookInfoMapper.save(BookInfo.builder().id("1").bookName("笑傲江湖").bookPage("100").build());
+        return save;
     }
 }

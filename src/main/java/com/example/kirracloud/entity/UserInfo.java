@@ -3,8 +3,7 @@ package com.example.kirracloud.entity;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
+@Builder
 public class UserInfo {
     private String id;
     private String userName;

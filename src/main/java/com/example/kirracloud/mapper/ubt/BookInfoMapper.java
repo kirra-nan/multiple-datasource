@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Mapper//指定这是一个操作数据库的mapper
 @Repository
 public interface BookInfoMapper {
-    public String save(@Param("bookInfo") BookInfo bookInfo);
+    public int save(@Param("bookInfo") BookInfo bookInfo);
 
     public BookInfo selectBook(String id);
 }

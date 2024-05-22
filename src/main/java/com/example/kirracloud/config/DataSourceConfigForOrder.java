@@ -1,6 +1,7 @@
 package com.example.kirracloud.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.example.kirracloud.content.DataSourceContent;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -45,16 +46,16 @@ public class DataSourceConfigForOrder {
         return bean.getObject();
     }
 
-    @Bean("orderSqlSessionTemplate")
-    // 表示这个数据源是默认数据源
-    @Primary
-    public SqlSessionTemplate getOrderSqlSessionTemplate(
-            @Qualifier("orderSqlSessionFactory") SqlSessionFactory sessionFactory) {
-        return new SqlSessionTemplate(sessionFactory);
-    }
+//    @Bean("orderSqlSessionTemplate")
+//    // 表示这个数据源是默认数据源
+//    @Primary
+//    public SqlSessionTemplate getOrderSqlSessionTemplate(
+//            @Qualifier("orderSqlSessionFactory") SqlSessionFactory sessionFactory) {
+//        return new SqlSessionTemplate(sessionFactory);
+//    }
 
     // TransactionManager(事务管理者)
-    @Bean(name = "orderTransactionManager")
+    @Bean(name = DataSourceContent.TRANSACTION_ORDER)
     @Primary
     public DataSourceTransactionManager getOrderTransactionManager(@Qualifier("orderDataSource") DataSource datasource) {
         DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
@@ -62,10 +63,10 @@ public class DataSourceConfigForOrder {
         return transactionManager;
     }
 
-    // TransactionTemplate(事务模板)
-    @Bean
-    @Primary
-    public TransactionTemplate getOrderTransactionTemplate(@Qualifier("orderTransactionManager") DataSourceTransactionManager manager) {
-        return new TransactionTemplate(manager);
-    }
+//    // TransactionTemplate(事务模板)
+//    @Bean
+//    @Primary
+//    public TransactionTemplate getOrderTransactionTemplate(@Qualifier(DataSourceContent.TRANSACTION_ORDER) DataSourceTransactionManager manager) {
+//        return new TransactionTemplate(manager);
+//    }
 }
