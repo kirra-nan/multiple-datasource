@@ -23,4 +23,10 @@ public class UserInfoController {
     public int save(@RequestBody UserInfo userInfo){
         return service.save(userInfo);
     }
+
+    @PostMapping("/save1")
+    @ResponseBody
+    public int save1(){
+        return service.save1();
+    }
 }
